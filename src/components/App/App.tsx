@@ -1,10 +1,10 @@
 import css from "./App.module.css";
 import NoteList from "../NoteList/NoteList"
 import Pagination from "../Pagination/Pagination";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { fetchNotes } from "../../services/noteService";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import {  useDebouncedCallback } from "use-debounce";
 import toast, { Toaster } from "react-hot-toast";
 import SearchBox from "../SearchBox/SearchBox";
 import Modal from "../Modal/Modal";
@@ -15,7 +15,7 @@ export default function App(){
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
-     const { data, isLoading, isFetching, isError } = useQuery({
+     const { data, isError } = useQuery({
     queryKey: ["notes", page, debouncedSearch],
     queryFn: () =>
       fetchNotes({

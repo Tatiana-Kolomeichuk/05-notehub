@@ -1,8 +1,5 @@
 import axios from "axios";
-import { Note } from "../types/note";
-import { FetchNextPageOptions } from "@tanstack/react-query";
-
-const API_KEY = import.meta.env.VITE_NOTEHUB_TOKEN;
+import type { Note } from "../types/note";
 
 const api = axios.create({
   baseURL: "https://notehub-public.goit.study/api",
@@ -22,21 +19,25 @@ export interface FetchNotesParams {
   search?: string;
 }
 
+export type CreateNotePayload = {
+  title: string;
+  content: string;
+  tag: string;
+};
+
 export async function fetchNotes(
-  params: FetchNotesParams,
+  params: FetchNotesParams
 ): Promise<FetchNotesResponse> {
-  const response = await api.get("/notes", {
-    params,
-  });
+  const response = await api.get<FetchNotesResponse>("/notes", { params });
   return response.data;
 }
 
-export async function createNote(newTask: Note) {
-  const response = await api.post<Note>("/notes", newTask);
+export async function createNote(payload: CreateNotePayload): Promise<Note> {
+  const response = await api.post<Note>("/notes", payload);
   return response.data;
 }
 
-export async function deleteNote(id: string) {
+export async function deleteNote(id: string): Promise<Note> {
   const response = await api.delete<Note>(`/notes/${id}`);
   return response.data;
 }
