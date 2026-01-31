@@ -1,7 +1,7 @@
 import css from "./App.module.css";
 import NoteList from "../NoteList/NoteList";
 import Pagination from "../Pagination/Pagination";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { fetchNotes } from "../../services/noteService";
 import { useDebouncedCallback } from "use-debounce";
@@ -17,14 +17,15 @@ export default function App() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const { data, isError } = useQuery({
-    queryKey: ["notes", page, debouncedSearch],
-    queryFn: () =>
-      fetchNotes({
-        page,
-        perPage: 12,
-        search: debouncedSearch,
-      }),
-  });
+  queryKey: ["notes", page, debouncedSearch],
+  queryFn: () =>
+    fetchNotes({
+      page,
+      perPage: 12,
+      search: debouncedSearch,
+    }),
+  placeholderData: keepPreviousData,
+});
 
   useEffect(() => {
     if (isError) toast.error("Failed to load notes");
