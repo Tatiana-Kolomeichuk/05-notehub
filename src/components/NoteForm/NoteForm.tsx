@@ -47,9 +47,12 @@ export default function NoteForm({ onClose }: NoteFormProps) {
     values: FormValues,
     actions: FormikHelpers<FormValues>
   ) => {
-    createMutation.mutate(values);
-    actions.resetForm();
-    onClose();
+    createMutation.mutate(values, {
+      onSuccess: () => {
+        actions.resetForm();
+        onClose();
+      },
+    });
   };
 
   return (
@@ -98,6 +101,9 @@ export default function NoteForm({ onClose }: NoteFormProps) {
           </Field>
           <ErrorMessage name="tag" component="span" className={css.error} />
         </div>
+        {createMutation.isError && (
+          <span className={css.error}>Failed to create note. Try again.</span>
+        )}
 
         <div className={css.actions}>
           <button type="button" className={css.cancelButton} onClick={onClose}>
